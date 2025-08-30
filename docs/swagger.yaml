@@ -1,0 +1,220 @@
+definitions:
+  model.ApiResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  model.Todo:
+    properties:
+      completed:
+        type: boolean
+      id:
+        type: string
+      title:
+        type: string
+      username:
+        type: string
+    type: object
+  model.User:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: TODO-API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: 사용자 인증 후 JWT 토큰을 반환합니다.
+      parameters:
+      - description: 로그인 정보
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+      summary: 사용자 로그인
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: 새로운 사용자를 등록합니다.
+      parameters:
+      - description: 등록할 유저 정보
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+      summary: 사용자 등록
+      tags:
+      - auth
+  /todos:
+    get:
+      description: 인증된 사용자의 Todo 목록을 조회합니다.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Todo'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Todo 목록 조회
+      tags:
+      - todos
+    post:
+      consumes:
+      - application/json
+      description: 새로운 Todo 항목을 생성합니다.
+      parameters:
+      - description: 할 일 정보
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/model.Todo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Todo 생성
+      tags:
+      - todos
+  /todos/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 기존 Todo 항목을 삭제합니다.
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Todo 삭제
+      tags:
+      - todos
+    put:
+      consumes:
+      - application/json
+      description: 기존 Todo 항목을 업데이트합니다.
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 할 일 정보
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/model.Todo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.ApiResponse'
+      security:
+      - BearerAuth: []
+      summary: Todo 업데이트
+      tags:
+      - todos
+securityDefinitions:
+  BearerAuth:
+    description: 'JWT Authorization: "Bearer {token}"'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
