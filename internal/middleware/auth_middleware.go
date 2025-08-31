@@ -49,7 +49,7 @@ func JWTMiddleware() func(http.Handler) http.Handler {
 
 			if err != nil || !token.Valid {
 				w.WriteHeader(http.StatusUnauthorized)
-				res.Message = "nvalid token"
+				res.Message = "invalid token"
 				json.NewEncoder(w).Encode(res)
 				return
 			}
