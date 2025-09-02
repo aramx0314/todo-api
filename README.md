@@ -16,6 +16,8 @@ Golang으로 구현한 간단한 Todo API 서버입니다. 사용자는 사용�
 
 ## 빌드
 ```bash
+git clone https://github.com/aramx0314/todo-api.git
+cd todo-api
 docker compose build
 ```
 
